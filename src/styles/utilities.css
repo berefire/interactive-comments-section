@@ -1,0 +1,6 @@
+@utility focus-ring {
+  &:focus-visible {
+    outline: 0.14em solid var(--focus-ring-color, currentColor);
+    outline-offset: 0.125em;
+  }
+}
