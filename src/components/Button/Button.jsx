@@ -1,5 +1,5 @@
 const base =
-  "inline-flex items-center justify-center rounded-[0.5rem] cursor-pointer transition-opacity hover:opacity-50 px-7.5 py-3 font-body uppercase text-white font-medium text-[1rem] leading-[1.5] disabled:opacity-50 disabled:cursor-not-allowed";
+  "inline-flex items-center justify-center rounded-[0.5rem] cursor-pointer transition-opacity hover:opacity-50 px-7.5 py-3 font-body uppercase text-white font-medium text-base disabled:opacity-50 disabled:cursor-not-allowed";
 
 const variants = {
   primary: "bg-purple-600 focus-ring focus-ring-purple-600",
