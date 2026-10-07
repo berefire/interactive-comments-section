@@ -4,3 +4,15 @@
     outline-offset: 0.125em;
   }
 }
+
+@utility focus-ring-purple-600 {
+  --focus-ring-color: var(--color-purple-600);
+}
+
+@utility focus-ring-grey-500 {
+  --focus-ring-color: var(--color-grey-500);
+}
+
+@utility focus-ring-pink-400 {
+  --focus-ring-color: var(--color-pink-400);
+}
