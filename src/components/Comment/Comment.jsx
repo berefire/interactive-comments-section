@@ -40,14 +40,14 @@ function Comment({
         )}
         {content}
       </p>
-      <div className="justify-self-start [grid-area:score] md:self-start">
+      <div className="mt-6 md:mt-0 justify-self-start [grid-area:score] md:self-center">
         <ScoreCounter
           score={score}
           onUpvote={onUpvote}
           onDownvote={onDownvote}
         />
       </div>
-      <div className="flex items-center gap-6 justify-self-end [grid-area:actions]">
+      <div className="mt-6 md:mt-0 flex items-center gap-6 justify-self-end [grid-area:actions]">
         {isCurrentUser ? (
           <>
             <ActionButton
