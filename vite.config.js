@@ -8,10 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import { playwright } from "@vitest/browser-playwright";
-const dirname =
-  typeof __dirname !== "undefined"
-    ? __dirname
-    : path.dirname(fileURLToPath(import.meta.url));
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
@@ -24,6 +21,18 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   test: {
     projects: [
+      // 1. Unit tests (reducer, utils, React Testing Library)
+      {
+        extends: true,
+        test: {
+          name: "unit",
+          environment: "jsdom",
+          setupFiles: ["./src/setupTests.js"],
+          include: ["src/**/*.test.{js,jsx}"],
+        },
+      },
+
+      // 2. Storybook tests
       {
         extends: true,
         plugins: [
