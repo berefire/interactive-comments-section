@@ -1,6 +1,10 @@
 import Avatar from "@/components/Avatar/Avatar";
+import { formatRelativeTime, isValidDate } from "@/utils/formatRelativeTime";
+import { useNow } from "@/hooks/useNow";
 
 function CommentHeader({ user, createdAt, isCurrentUser = false }) {
+  const now = useNow();
+
   return (
     <header className="flex items-center gap-4 font-body text-base">
       <Avatar user={user} />
@@ -17,7 +21,13 @@ function CommentHeader({ user, createdAt, isCurrentUser = false }) {
         )}
       </div>
 
-      <span className="text-grey-500">{createdAt}</span>
+      {isValidDate(createdAt) ? (
+        <time dateTime={createdAt} className="text-grey-500">
+          {formatRelativeTime(createdAt, now)}
+        </time>
+      ) : (
+        <span className="text-grey-500">{createdAt}</span>
+      )}
     </header>
   );
 }
