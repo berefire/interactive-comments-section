@@ -34,7 +34,7 @@ function App() {
 
   return (
     <div className="min-h-dvh flex flex-col bg-grey-50">
-      <main className="mx-auto flex md:max-w-171 lg:max-w-182.5 flex-col gap-4 px-4 py-8 md:py-16">
+      <main className="mx-auto flex max-w-171 lg:max-w-182.5 flex-col gap-4 px-4 py-8 md:py-16">
         <h1 className="sr-only">Interactive comments section</h1>
 
         <ul className="flex flex-col gap-4">
