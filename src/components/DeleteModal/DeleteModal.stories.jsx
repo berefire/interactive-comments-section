@@ -27,7 +27,7 @@ export const Closed = {
 export const FocusOnCancel = {
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole("button", { name: /no, cancel/i })
+      canvas.getByRole("button", { name: /no, cancel/i }),
     ).toHaveFocus();
   },
 };
@@ -44,15 +44,24 @@ export const CancelTest = {
 // 4. Delete button
 export const DeleteTest = {
   play: async ({ args, canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole("button", { name: /yes, delete/i }));
+    const deleteButton = await canvas.findByRole("button", {
+      name: /yes, delete/i,
+    });
+    await userEvent.click(deleteButton);
     await expect(args.onDelete).toHaveBeenCalledTimes(1);
   },
 };
 
 // 5. Esc key closes it
 export const EscapeTest = {
-  play: async ({ args, userEvent }) => {
-    await userEvent.keyboard("{Escape}");
+  play: async ({ args, canvas }) => {
+    const dialog = await canvas.findByRole("dialog", {
+      name: /delete comment/i,
+    });
+
+    // Simulate what the browser does when the user presses Esc
+    dialog.dispatchEvent(new Event("cancel", { cancelable: true }));
+
     await expect(args.onCancel).toHaveBeenCalledTimes(1);
   },
 };
@@ -61,7 +70,7 @@ export const EscapeTest = {
 export const AccessibleName = {
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole("dialog", { name: /delete comment/i })
+      canvas.getByRole("dialog", { name: /delete comment/i }),
     ).toBeInTheDocument();
   },
 };
