@@ -1,4 +1,4 @@
-import { expect, within, fn } from "storybook/test";
+import { expect, within, fn, waitFor } from "storybook/test";
 import data from "@/data/data.json";
 import CommentThread from "./CommentThread";
 
@@ -66,7 +66,9 @@ export const OwnReplyActions = {
 export const ReplyFormOpen = {
   args: { comment: comments[0], replyingToId: comments[0].id },
   play: async ({ canvas }) => {
-    await expect(canvas.getByDisplayValue("@amyrobson")).toHaveFocus();
+    const textarea = await canvas.findByDisplayValue("@amyrobson");
+    await waitFor(() => expect(textarea).toHaveFocus());
+    await expect(textarea.selectionStart).toBe("@amyrobson ".length); // 11, after the space
   },
 };
 

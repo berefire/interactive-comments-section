@@ -46,7 +46,7 @@ describe("App", () => {
     render(<App />);
 
     await user.click(
-      within(getCommentBy("amyrobson")).getByRole("button", { name: /reply/i })
+      within(getCommentBy("amyrobson")).getByRole("button", { name: /reply/i }),
     );
 
     const textarea = screen.getByDisplayValue("@amyrobson");
@@ -75,9 +75,13 @@ describe("App", () => {
     render(<App />);
 
     await user.click(screen.getByRole("button", { name: /delete/i }));
-    await user.click(await screen.findByRole("button", { name: /yes, delete/i }));
+    await user.click(
+      await screen.findByRole("button", { name: /yes, delete/i }),
+    );
 
-    expect(screen.queryByText(/I couldn't agree more/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/I couldn't agree more/i),
+    ).not.toBeInTheDocument();
     expect(screen.getAllByRole("article")).toHaveLength(3);
   });
 
@@ -85,12 +89,25 @@ describe("App", () => {
     const user = userEvent.setup();
     const { unmount } = render(<App />);
 
-    await user.type(screen.getByLabelText("Add a comment"), "Persisted comment");
+    await user.type(
+      screen.getByLabelText("Add a comment"),
+      "Persisted comment",
+    );
     await user.click(screen.getByRole("button", { name: /send/i }));
 
-    unmount();          // "close" the app
-    render(<App />);    // "reload": it loads from localStorage
+    unmount(); // "close" the app
+    render(<App />); // "reload": it loads from localStorage
 
     expect(screen.getByText("Persisted comment")).toBeInTheDocument();
+  });
+
+  it("returns focus to the Edit button after updating", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /edit/i }));
+    await user.click(screen.getByRole("button", { name: /update/i }));
+
+    expect(screen.getByRole("button", { name: /edit/i })).toHaveFocus();
   });
 });
