@@ -1,8 +1,9 @@
 import { useEffect, useRef, useId } from "react";
 import Button from "@/components/Button/Button";
 
-function DeleteModal({ isOpen, onCancel, onDelete }) {
+function DeleteModal({ isOpen, onCancel, onDelete, fallbackFocusRef }) {
   const dialogRef = useRef(null);
+  const openerRef = useRef(null);
   const titleId = useId();
 
   useEffect(() => {
@@ -10,11 +11,20 @@ function DeleteModal({ isOpen, onCancel, onDelete }) {
     if (!dialog) return;
 
     if (isOpen && !dialog.open) {
+      openerRef.current = document.activeElement;
       dialog.showModal();
     } else if (!isOpen && dialog.open) {
       dialog.close();
+
+      const opener = openerRef.current;
+      if (opener?.isConnected) {
+        opener.focus();
+      } else {
+        fallbackFocusRef?.current?.focus();
+      }
+      openerRef.current = null;
     }
-  }, [isOpen]);
+  }, [isOpen, fallbackFocusRef]);
 
   return (
     <dialog

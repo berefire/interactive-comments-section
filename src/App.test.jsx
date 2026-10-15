@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
 
@@ -124,5 +124,32 @@ describe("App", () => {
     await user.click(upvote);
     expect(within(comment).getByText("12")).toBeInTheDocument();
     expect(upvote).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("returns focus to the Delete button after cancelling", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    const deleteButton = screen.getByRole("button", { name: /delete/i });
+    await user.click(deleteButton);
+    await user.click(
+      await screen.findByRole("button", { name: /no, cancel/i }),
+    );
+
+    await waitFor(() => expect(deleteButton).toHaveFocus());
+  });
+
+  it("moves focus to the main heading after deleting", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /delete/i }));
+    await user.click(
+      await screen.findByRole("button", { name: /yes, delete/i }),
+    );
+
+    await waitFor(() =>
+      expect(screen.getByRole("heading", { level: 1 })).toHaveFocus(),
+    );
   });
 });
