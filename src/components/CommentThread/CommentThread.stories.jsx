@@ -9,6 +9,7 @@ export default {
   component: CommentThread,
   args: { 
     currentUser,
+    votes: {},
     replyingToId: null,
     editingId: null,
     onUpvote: fn(),

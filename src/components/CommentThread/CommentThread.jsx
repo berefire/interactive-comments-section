@@ -4,7 +4,7 @@ import CommentForm from "@/components/CommentForm/CommentForm";
 function CommentThread({
   comment,
   currentUser,
-  votes,
+  votes = {},
   replyingToId,
   editingId,
   onUpvote,
