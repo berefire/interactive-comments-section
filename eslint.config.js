@@ -18,4 +18,14 @@ export default defineConfig([globalIgnores(['dist']), {
     globals: globals.browser,
     parserOptions: { ecmaFeatures: { jsx: true } },
   },
+  rules: {
+    'no-unused-vars': [
+      'error',
+      {
+        varsIgnorePattern: '^_',
+        argsIgnorePattern: '^_',
+        ignoreRestSiblings: true,
+      },
+    ],
+  },
 }, ...storybook.configs["flat/recommended"]])
