@@ -56,6 +56,20 @@ describe("loadState", () => {
     ["null", "null"],
     ["an empty object", "{}"],
     [
+      "a negative score",
+      JSON.stringify({
+        ...savedState,
+        comments: [{ ...savedState.comments[0], score: -5 }],
+      }),
+    ],
+    [
+      "a decimal score",
+      JSON.stringify({
+        ...savedState,
+        comments: [{ ...savedState.comments[0], score: 1.5 }],
+      }),
+    ],
+    [
       "comments that are not an array",
       JSON.stringify({ ...savedState, comments: "hello" }),
     ],

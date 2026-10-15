@@ -31,8 +31,10 @@ function isValidComment(comment, { isReply = false } = {}) {
     isObject(comment) &&
     (typeof comment.id === "number" || typeof comment.id === "string") &&
     typeof comment.content === "string" &&
-    typeof comment.score === "number" &&
+    typeof comment.createdAt === "string" &&
+    Number.isInteger(comment.score) && comment.score >= 0 &&
     isValidUser(comment.user) &&
+    (comment.replyingTo === undefined || typeof comment.replyingTo === "string") &&
     (isReply || hasValidReplies(comment))
   );
 }
