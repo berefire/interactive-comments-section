@@ -1,6 +1,7 @@
 export const STORAGE_KEY = "interactive-comments:v1";
 
 const isObject = (value) => typeof value === "object" && value !== null;
+const isPlainObject = (value) => isObject(value) && !Array.isArray(value);
 
 function isValidImage(image) {
   return (
@@ -18,25 +19,39 @@ function isValidUser(user) {
   );
 }
 
+function hasValidReplies(comment) {
+  return (
+    Array.isArray(comment.replies) &&
+    comment.replies.every((reply) => isValidComment(reply, { isReply: true }))
+  );
+}
+
 function isValidComment(comment, { isReply = false } = {}) {
   return (
     isObject(comment) &&
-    comment.id !== undefined &&
+    (typeof comment.id === "number" || typeof comment.id === "string") &&
     typeof comment.content === "string" &&
     typeof comment.score === "number" &&
     isValidUser(comment.user) &&
-    (isReply || (Array.isArray(comment.replies) &&
-      comment.replies.every((reply) => isValidComment(reply, { isReply: true }))))
+    (isReply || hasValidReplies(comment))
+  );
+}
+
+function isValidVotes(votes) {
+  return (
+    votes === undefined ||                      // older saved data has no votes
+    (isPlainObject(votes) &&
+      Object.values(votes).every((vote) => vote === 1 || vote === -1))
   );
 }
 
 export function isValidState(state) {
   return (
-    isObject(state) &&
+    isPlainObject(state) &&
     isValidUser(state.currentUser) &&
     Array.isArray(state.comments) &&
     state.comments.every((comment) => isValidComment(comment)) &&
-    (state.votes === undefined || isObject(state.votes))
+    isValidVotes(state.votes)
   );
 }
 

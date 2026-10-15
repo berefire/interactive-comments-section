@@ -82,10 +82,17 @@ describe("loadState", () => {
         ],
       }),
     ],
-    // New: votes must be an object if it exists
     [
-      "votes that are not an object",
-      JSON.stringify({ ...savedState, votes: "x" }),
+      "votes that are an array",
+      JSON.stringify({ ...savedState, votes: [1, -1] }),
+    ],
+    [
+      "a vote value that is not 1 or -1",
+      JSON.stringify({ ...savedState, votes: { 1: 5 } }),
+    ],
+    [
+      "a vote value that is a string",
+      JSON.stringify({ ...savedState, votes: { 1: "1" } }),
     ],
     [
       "a user without an image",
