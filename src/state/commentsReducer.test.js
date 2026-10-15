@@ -13,29 +13,55 @@ function deepFreeze(obj) {
 
 const initialState = deepFreeze(structuredClone(data));
 
-describe("UPVOTE / DOWNVOTE", () => {
-  it("UPVOTE increases a comment's score", () => {
-    const state = commentsReducer(initialState, { type: ACTIONS.UPVOTE, id: 1 });
+describe("voting", () => {
+  it("upvotes once", () => {
+    const state = commentsReducer(initialState, {
+      type: ACTIONS.UPVOTE,
+      id: 1,
+    });
     expect(state.comments[0].score).toBe(13);
+    expect(state.votes[1]).toBe(1);
   });
 
-  it("DOWNVOTE decreases a reply's score", () => {
-    const state = commentsReducer(initialState, { type: ACTIONS.DOWNVOTE, id: 3 });
-    expect(state.comments[1].replies[0].score).toBe(3);
+  it("upvoting twice undoes the vote", () => {
+    let state = commentsReducer(initialState, { type: ACTIONS.UPVOTE, id: 1 });
+    state = commentsReducer(state, { type: ACTIONS.UPVOTE, id: 1 });
+    expect(state.comments[0].score).toBe(12);
+    expect(state.votes[1]).toBeUndefined();
   });
 
-  it("DOWNVOTE never goes below 0", () => {
-    let state = initialState;
-    for (let i = 0; i < 10; i++) {
-      state = commentsReducer(state, { type: ACTIONS.DOWNVOTE, id: 4 }); // score starts at 2
-    }
-    expect(state.comments[1].replies[1].score).toBe(0);
+  it("switching from upvote to downvote changes the score by 2", () => {
+    let state = commentsReducer(initialState, { type: ACTIONS.UPVOTE, id: 1 });
+    state = commentsReducer(state, { type: ACTIONS.DOWNVOTE, id: 1 });
+    expect(state.comments[0].score).toBe(11);
+    expect(state.votes[1]).toBe(-1);
+  });
+
+  it("does not go below 0", () => {
+    const atZero = deepFreeze({
+      ...structuredClone(data),
+      comments: [{ ...structuredClone(data.comments[0]), score: 0 }],
+    });
+    const state = commentsReducer(atZero, { type: ACTIONS.DOWNVOTE, id: 1 });
+    expect(state).toBe(atZero); // vote rejected, nothing changed
+  });
+
+  it("votes on one comment do not affect another", () => {
+    const state = commentsReducer(initialState, {
+      type: ACTIONS.UPVOTE,
+      id: 1,
+    });
+    expect(state.comments[1].score).toBe(5);
+    expect(state.votes[2]).toBeUndefined();
   });
 });
 
 describe("ADD_COMMENT", () => {
   it("adds a comment by the current user at the end", () => {
-    const state = commentsReducer(initialState, { type: ACTIONS.ADD_COMMENT, content: "Hi!" });
+    const state = commentsReducer(initialState, {
+      type: ACTIONS.ADD_COMMENT,
+      content: "Hi!",
+    });
     expect(state.comments).toHaveLength(3);
     expect(state.comments.at(-1)).toMatchObject({
       content: "Hi!",
@@ -101,12 +127,18 @@ describe("EDIT_COMMENT", () => {
 
 describe("DELETE_COMMENT", () => {
   it("removes a reply", () => {
-    const state = commentsReducer(initialState, { type: ACTIONS.DELETE_COMMENT, id: 4 });
+    const state = commentsReducer(initialState, {
+      type: ACTIONS.DELETE_COMMENT,
+      id: 4,
+    });
     expect(state.comments[1].replies).toHaveLength(1);
   });
 
   it("removes a top-level comment with its replies", () => {
-    const state = commentsReducer(initialState, { type: ACTIONS.DELETE_COMMENT, id: 2 });
+    const state = commentsReducer(initialState, {
+      type: ACTIONS.DELETE_COMMENT,
+      id: 2,
+    });
     expect(state.comments).toHaveLength(1);
   });
 });
