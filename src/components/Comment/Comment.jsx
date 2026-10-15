@@ -2,14 +2,17 @@ import { getAssetUrl } from "@/utils/getAssetUrl";
 import CommentHeader from "@/components/CommentHeader/CommentHeader";
 import ScoreCounter from "@/components/ScoreCounter/ScoreCounter";
 import ActionButton from "@/components/ActionButton/ActionButton";
+import CommentEditForm from "@/components/CommentEditForm/CommentEditForm";
 
 function Comment({
   comment,
   isCurrentUser,
+  isEditing,
   onUpvote,
   onDownvote,
   onReply,
   onEdit,
+  onUpdate,
   onDelete,
 }) {
   const { user, createdAt, score, replyingTo, content } = comment;
@@ -34,12 +37,22 @@ function Comment({
           isCurrentUser={isCurrentUser}
         />
       </div>
-      <p className="[grid-area:content] text-grey-500">
+      <div className="[grid-area:content]">
+       {isEditing ? (
+      <CommentEditForm
+        initialValue={replyingTo ? `@${replyingTo} ${content}` : content}
+        onSubmit={onUpdate}
+        onCancel={onEdit}
+      />
+    ) : (
+      <p className="text-grey-500">
         {replyingTo && (
           <span className="font-medium text-purple-600">@{replyingTo} </span>
         )}
         {content}
       </p>
+    )}
+      </div>
       <div className="mt-6 md:mt-0 justify-self-start [grid-area:score] md:self-center">
         <ScoreCounter
           score={score}

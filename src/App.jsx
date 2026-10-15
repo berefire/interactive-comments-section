@@ -10,11 +10,18 @@ import DeleteModal from "@/components/DeleteModal/DeleteModal";
 function App() {
   const [state, dispatch] = useReducer(commentsReducer, data);
   const [replyingToId, setReplyingToId] = useState(null);
+  const [editingId, setEditingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const { currentUser, comments } = state;
 
   const handleUpvote = (id) => dispatch({ type: ACTIONS.UPVOTE, id });
   const handleDownvote = (id) => dispatch({ type: ACTIONS.DOWNVOTE, id });
+  const handleEdit = (id) =>
+    setEditingId((current) => (current === id ? null : id));
+  const handleUpdate = (id, content) => {
+    dispatch({ type: ACTIONS.EDIT_COMMENT, id, content });
+    setEditingId(null);
+  };
 
   const handleReply = (id) =>
     setReplyingToId((current) => (current === id ? null : id)); // click again = close
@@ -34,10 +41,10 @@ function App() {
 
   return (
     <div className="min-h-dvh flex flex-col bg-grey-50">
-      <main className="mx-auto flex max-w-171 lg:max-w-182.5 flex-col gap-4 px-4 py-8 md:py-16">
+      <main className="mx-auto flex w-full md:max-w-171 lg:max-w-182.5 flex-col gap-4 md:gap-6 px-4 py-8 md:py-16">
         <h1 className="sr-only">Interactive comments section</h1>
 
-        <ul className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-4 md:gap-6">
           {comments.map((comment) => (
             <CommentThread
               key={comment.id}
@@ -49,6 +56,9 @@ function App() {
               onReply={handleReply}
               onSubmitReply={handleSubmitReply}
               onDelete={setDeletingId}
+              editingId={editingId}
+              onEdit={handleEdit}
+              onUpdate={handleUpdate}
             />
           ))}
         </ul>
