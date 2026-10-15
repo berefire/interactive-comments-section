@@ -60,3 +60,24 @@ export function findComment(comments, id) {
   }
   return undefined;
 }
+
+export function applyVote(state, id, value) {
+  const votes = state.votes ?? {};
+  const current = votes[id] ?? 0;               // 1, -1, or 0 (no vote)
+  const next = current === value ? 0 : value;   // same button again = undo
+  const delta = next - current;                 // how much the score changes
+
+  const target = findComment(state.comments, id);
+  if (!target || target.score + delta < 0) return state; // never below 0
+
+  const { [id]: _removed, ...otherVotes } = votes;
+
+  return {
+    ...state,
+    votes: next === 0 ? otherVotes : { ...votes, [id]: next },
+    comments: updateComment(state.comments, id, (comment) => ({
+      ...comment,
+      score: comment.score + delta,
+    })),
+  };
+}
