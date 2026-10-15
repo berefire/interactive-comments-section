@@ -152,4 +152,32 @@ describe("App", () => {
       expect(screen.getByRole("heading", { level: 1 })).toHaveFocus(),
     );
   });
+
+  it("announces when a comment is added", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.type(screen.getByLabelText("Add a comment"), "Hello");
+    await user.click(screen.getByRole("button", { name: /send/i }));
+
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "Your comment was added.",
+      ),
+    );
+  });
+
+  it("announces when a comment is deleted", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: /delete/i }));
+    await user.click(
+      await screen.findByRole("button", { name: /yes, delete/i }),
+    );
+
+    await waitFor(() =>
+      expect(screen.getByRole("status")).toHaveTextContent("Comment deleted."),
+    );
+  });
 });

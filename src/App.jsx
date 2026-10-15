@@ -13,16 +13,26 @@ function App() {
   const [replyingToId, setReplyingToId] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
+  const [announcement, setAnnouncement] = useState("");
   const { currentUser, comments, votes = {} } = state;
   const headingRef = useRef(null);
 
+  const announce = (message) => {
+    setAnnouncement("");
+    requestAnimationFrame(() => setAnnouncement(message));
+  };
+
   const handleUpvote = (id) => dispatch({ type: ACTIONS.UPVOTE, id });
+  
   const handleDownvote = (id) => dispatch({ type: ACTIONS.DOWNVOTE, id });
+  
   const handleEdit = (id) =>
     setEditingId((current) => (current === id ? null : id));
+  
   const handleUpdate = (id, content) => {
     dispatch({ type: ACTIONS.EDIT_COMMENT, id, content });
     setEditingId(null);
+    announce("Your comment was updated.");
   };
 
   const handleReply = (id) =>
@@ -31,14 +41,18 @@ function App() {
   const handleSubmitReply = (targetId, content) => {
     dispatch({ type: ACTIONS.ADD_REPLY, targetId, content });
     setReplyingToId(null);
+    announce("Your reply was added.");
   };
 
-  const handleAddComment = (content) =>
+  const handleAddComment = (content) => {
     dispatch({ type: ACTIONS.ADD_COMMENT, content });
+    announce("Your comment was added.");
+  };
 
   const handleConfirmDelete = () => {
     dispatch({ type: ACTIONS.DELETE_COMMENT, id: deletingId });
     setDeletingId(null);
+    announce("Comment deleted.");
   };
 
   useEffect(() => {
@@ -78,6 +92,8 @@ function App() {
           onDelete={handleConfirmDelete}
           fallbackFocusRef={headingRef}
         />
+
+        <p role="status" aria-live="polite" className="sr-only">{announcement}</p>
       </main>
       <Attribution />
     </div>
