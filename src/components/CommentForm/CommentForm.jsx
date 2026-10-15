@@ -1,4 +1,5 @@
-import { useState, useId } from "react";
+import { useState, useId, useRef } from "react";
+import { useFocusAtEnd } from "@/hooks/useFocusAtEnd";
 import Button from "@/components/Button/Button";
 import Avatar from "@/components/Avatar/Avatar";
 
@@ -11,6 +12,8 @@ function CommentForm({
 }) {
   const [text, setText] = useState(initialValue);
   const textareaId = useId();
+  const textareaRef = useRef(null);
+  useFocusAtEnd(textareaRef, autoFocus);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,6 +39,7 @@ function CommentForm({
       </label>
       <textarea
         id={textareaId}
+        ref={textareaRef}
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Add a comment..."

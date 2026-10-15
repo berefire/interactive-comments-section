@@ -1,11 +1,14 @@
 // src/components/CommentEditForm/CommentEditForm.jsx
 import { useEffect, useId, useRef, useState } from "react";
+import { useFocusAtEnd } from "@/hooks/useFocusAtEnd";
 import Button from "@/components/Button/Button";
 
 function CommentEditForm({ initialValue, onSubmit, onCancel }) {
   const [text, setText] = useState(initialValue);
   const textareaRef = useRef(null);
   const textareaId = useId();
+
+  useFocusAtEnd(textareaRef);
 
   // Focus the textarea and put the cursor at the END of the text
   useEffect(() => {
