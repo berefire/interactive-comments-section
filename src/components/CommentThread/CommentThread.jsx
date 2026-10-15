@@ -4,6 +4,7 @@ import CommentForm from "@/components/CommentForm/CommentForm";
 function CommentThread({
   comment,
   currentUser,
+  votes,
   replyingToId,
   editingId,
   onUpvote,
@@ -18,6 +19,7 @@ function CommentThread({
     <div className="flex flex-col gap-4 md:gap-6">
       <Comment
         comment={c}
+        userVote={votes[c.id] ?? 0}
         isCurrentUser={c.user.username === currentUser.username}
         isEditing={editingId === c.id}
         onUpvote={() => onUpvote(c.id)}
