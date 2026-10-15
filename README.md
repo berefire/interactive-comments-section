@@ -70,7 +70,7 @@ Users should be able to:
 
 ### 🔗Links
 
-- Solution URL: [Add solution URL here](https://www.frontendmentor.io/solutions/)
+- Solution URL: [https://www.frontendmentor.io/solutions/accessible-comments-section-with-react-tailwind-v4-and-full-test-suit-dMRiacpwl9](https://www.frontendmentor.io/solutions/accessible-comments-section-with-react-tailwind-v4-and-full-test-suit-dMRiacpwl9)
 - Live Site URL: [https://berefire.github.io/interactive-comments-section/](https://berefire.github.io/interactive-comments-section/)
 
 ## ⚙️My process
