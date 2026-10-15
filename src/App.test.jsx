@@ -110,4 +110,19 @@ describe("App", () => {
 
     expect(screen.getByRole("button", { name: /edit/i })).toHaveFocus();
   });
+
+  it("upvoting twice undoes the vote", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    const comment = getCommentBy("amyrobson");
+    const upvote = within(comment).getByRole("button", { name: "Upvote" });
+
+    await user.click(upvote);
+    expect(within(comment).getByText("13")).toBeInTheDocument();
+    expect(upvote).toHaveAttribute("aria-pressed", "true");
+
+    await user.click(upvote);
+    expect(within(comment).getByText("12")).toBeInTheDocument();
+    expect(upvote).toHaveAttribute("aria-pressed", "false");
+  });
 });

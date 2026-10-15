@@ -13,7 +13,7 @@ function App() {
   const [replyingToId, setReplyingToId] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
-  const { currentUser, comments } = state;
+  const { currentUser, comments, votes = {} } = state;
 
   const handleUpvote = (id) => dispatch({ type: ACTIONS.UPVOTE, id });
   const handleDownvote = (id) => dispatch({ type: ACTIONS.DOWNVOTE, id });
@@ -56,6 +56,7 @@ function App() {
               comment={comment}
               currentUser={currentUser}
               replyingToId={replyingToId}
+              votes={votes}
               onUpvote={handleUpvote}
               onDownvote={handleDownvote}
               onReply={handleReply}
