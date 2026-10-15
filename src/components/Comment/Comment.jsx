@@ -7,6 +7,7 @@ import CommentEditForm from "@/components/CommentEditForm/CommentEditForm";
 
 function Comment({
   comment,
+  userVote,
   isCurrentUser,
   isEditing = false,
   onUpvote,
@@ -69,6 +70,7 @@ function Comment({
       <div className="mt-6 md:mt-0 justify-self-start [grid-area:score] md:self-center">
         <ScoreCounter
           score={score}
+          userVote={userVote}
           onUpvote={onUpvote}
           onDownvote={onDownvote}
         />
