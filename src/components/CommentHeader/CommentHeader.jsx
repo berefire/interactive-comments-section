@@ -6,7 +6,7 @@ function CommentHeader({ user, createdAt, isCurrentUser = false }) {
   const now = useNow();
 
   return (
-    <header className="flex items-center gap-4 font-body text-base">
+    <header className="flex flex-wrap items-center gap-4 gap-y-1 font-body text-base">
       <Avatar user={user} />
 
       <div className="flex items-center gap-2">

@@ -34,22 +34,22 @@ function Comment({
       className={[
         "grid gap-4 rounded-lg bg-white p-4 md:gap-x-6 md:p-6",
         // mobile: 2 columns
-        "grid-cols-[1fr_auto]",
+        "grid-cols-[minmax(0,1fr)_auto]",
         "[grid-template-areas:'header_header'_'content_content'_'score_actions']",
         // md+: 3 columns
-        "md:grid-cols-[auto_1fr_auto]",
+        "md:grid-cols-[auto_minmax(0,1fr)_auto]",
         "md:[grid-template-areas:'score_header_actions'_'score_content_content']",
       ].join(" ")}
       aria-label={`Comment by ${user.username}`}
     >
-      <div className="[grid-area:header]">
+      <div className="min-w-0 [grid-area:header]">
         <CommentHeader
           user={user}
           createdAt={createdAt}
           isCurrentUser={isCurrentUser}
         />
       </div>
-      <div className="[grid-area:content]">
+      <div className="min-w-0 [grid-area:content]">
         {isEditing ? (
           <CommentEditForm
             initialValue={replyingTo ? `@${replyingTo} ${content}` : content}
@@ -57,7 +57,7 @@ function Comment({
             onCancel={onEdit}
           />
         ) : (
-          <p className="text-grey-500">
+          <p className="wrap-break-words text-grey-500">
             {replyingTo && (
               <span className="font-medium text-purple-600">
                 @{replyingTo}{" "}
