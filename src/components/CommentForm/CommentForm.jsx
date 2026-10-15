@@ -7,6 +7,7 @@ function CommentForm({
   onSubmit,
   submitLabel = "Send",
   initialValue = "",
+  autoFocus = false,
 }) {
   const [text, setText] = useState(initialValue);
   const textareaId = useId();
@@ -39,6 +40,7 @@ function CommentForm({
         onChange={(e) => setText(e.target.value)}
         placeholder="Add a comment..."
         required
+        autoFocus={autoFocus}
         className="[grid-area:comment] min-h-24 w-full resize-none appearance-none rounded-lg border border-grey-100 px-6 py-3 text-grey-800 placeholder:text-grey-500 focus-ring focus-ring-purple-600"
       />
       <div className="[grid-area:avatar] self-center md:self-start">
