@@ -1,15 +1,22 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { loadState, saveState, STORAGE_KEY } from "./storage";
 
-const defaultState = { currentUser: { username: "juliusomo" }, comments: [] };
+const image = {
+  png: "./assets/images/avatars/image-juliusomo.png",
+  webp: "./assets/images/avatars/image-juliusomo.webp",
+};
+const defaultState = {
+  currentUser: { username: "juliusomo", image },
+  comments: [],
+};
 const savedState = {
-  currentUser: { username: "juliusomo" },
+  currentUser: { username: "juliusomo", image },
   comments: [
     {
       id: 1,
       content: "Saved comment",
       score: 5,
-      user: { username: "amyrobson" },
+      user: { username: "amyrobson", image },
       replies: [],
     },
   ],
@@ -79,6 +86,13 @@ describe("loadState", () => {
     [
       "votes that are not an object",
       JSON.stringify({ ...savedState, votes: "x" }),
+    ],
+    [
+      "a user without an image",
+      JSON.stringify({
+        ...savedState,
+        comments: [{ ...savedState.comments[0], user: { username: "x" } }],
+      }),
     ],
   ])("returns the default state when the saved data is %s", (_label, value) => {
     localStorage.setItem(STORAGE_KEY, value);

@@ -2,8 +2,20 @@ export const STORAGE_KEY = "interactive-comments:v1";
 
 const isObject = (value) => typeof value === "object" && value !== null;
 
+function isValidImage(image) {
+  return (
+    isObject(image) &&
+    typeof image.png === "string" &&
+    typeof image.webp === "string"
+  );
+}
+
 function isValidUser(user) {
-  return isObject(user) && typeof user.username === "string";
+  return (
+    isObject(user) &&
+    typeof user.username === "string" &&
+    isValidImage(user.image)
+  );
 }
 
 function isValidComment(comment, { isReply = false } = {}) {
