@@ -2,7 +2,7 @@ import ActionButton from "@/components/ActionButton/ActionButton";
 import { getAssetUrl } from "@/utils/getAssetUrl";
 
 function ScoreCounter({ score, userVote = 0, onUpvote, onDownvote }) {
-  const isMinScore = score <= 0;
+  const downvoteLocked = score <= 0 && userVote !== -1;
 
   return (
     <div className="inline-flex md:flex-col items-center justify-center gap-4 p-2 bg-grey-50 rounded-[0.625rem]">
@@ -11,7 +11,7 @@ function ScoreCounter({ score, userVote = 0, onUpvote, onDownvote }) {
         <span className="sr-only">Score: </span>
         {score}
       </span>
-      <ActionButton aria-label="Downvote" aria-pressed={userVote === -1} onClick={isMinScore ? undefined : onDownvote} icon={getAssetUrl("./assets/images/icons/icon-minus.svg")} aria-disabled={isMinScore} />
+      <ActionButton aria-label="Downvote" aria-pressed={userVote === -1} onClick={downvoteLocked ? undefined : onDownvote} icon={getAssetUrl("./assets/images/icons/icon-minus.svg")} aria-disabled={downvoteLocked} />
     </div>
   );
 }
