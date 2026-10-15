@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { getAssetUrl } from "@/utils/getAssetUrl";
 import CommentHeader from "@/components/CommentHeader/CommentHeader";
 import ScoreCounter from "@/components/ScoreCounter/ScoreCounter";
@@ -7,7 +8,7 @@ import CommentEditForm from "@/components/CommentEditForm/CommentEditForm";
 function Comment({
   comment,
   isCurrentUser,
-  isEditing,
+  isEditing = false,
   onUpvote,
   onDownvote,
   onReply,
@@ -16,6 +17,16 @@ function Comment({
   onDelete,
 }) {
   const { user, createdAt, score, replyingTo, content } = comment;
+  const editButtonRef = useRef(null);
+  const wasEditing = useRef(isEditing);
+
+  useEffect(() => {
+    // Only when edit mode just CLOSED (true → false)
+    if (wasEditing.current && !isEditing) {
+      editButtonRef.current?.focus();
+    }
+    wasEditing.current = isEditing; // remember for the next change
+  }, [isEditing]);
 
   return (
     <article
@@ -38,20 +49,22 @@ function Comment({
         />
       </div>
       <div className="[grid-area:content]">
-       {isEditing ? (
-      <CommentEditForm
-        initialValue={replyingTo ? `@${replyingTo} ${content}` : content}
-        onSubmit={onUpdate}
-        onCancel={onEdit}
-      />
-    ) : (
-      <p className="text-grey-500">
-        {replyingTo && (
-          <span className="font-medium text-purple-600">@{replyingTo} </span>
+        {isEditing ? (
+          <CommentEditForm
+            initialValue={replyingTo ? `@${replyingTo} ${content}` : content}
+            onSubmit={onUpdate}
+            onCancel={onEdit}
+          />
+        ) : (
+          <p className="text-grey-500">
+            {replyingTo && (
+              <span className="font-medium text-purple-600">
+                @{replyingTo}{" "}
+              </span>
+            )}
+            {content}
+          </p>
         )}
-        {content}
-      </p>
-    )}
       </div>
       <div className="mt-6 md:mt-0 justify-self-start [grid-area:score] md:self-center">
         <ScoreCounter
@@ -71,6 +84,8 @@ function Comment({
               Delete
             </ActionButton>
             <ActionButton
+              ref={editButtonRef}
+              aria-pressed={isEditing}
               icon={getAssetUrl("./assets/images/icons/icon-edit.svg")}
               onClick={onEdit}
             >

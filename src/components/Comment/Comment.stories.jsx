@@ -1,4 +1,5 @@
-import { expect, fn } from "storybook/test";
+import { useState } from "react";
+import { expect, fn, waitFor } from "storybook/test";
 import data from "@/data/data.json";
 import Comment from "./Comment";
 
@@ -16,6 +17,7 @@ export default {
     onDownvote: fn(),
     onReply: fn(),
     onEdit: fn(),
+    onUpdate: fn(),
     onDelete: fn(),
   },
 };
@@ -50,5 +52,35 @@ export const Editing = {
   play: async ({ canvas }) => {
     await expect(canvas.getByLabelText("Edit comment")).toBeInTheDocument();
     await expect(canvas.getByRole("button", { name: /update/i })).toBeInTheDocument();
+  },
+};
+
+function EditableComment(args) {
+  const [isEditing, setIsEditing] = useState(false);
+  return (
+    <Comment
+      {...args}
+      isEditing={isEditing}
+      onEdit={() => setIsEditing((current) => !current)}
+      onUpdate={() => setIsEditing(false)}
+    />
+  );
+}
+
+export const FocusReturnsAfterEditing = {
+  args: { comment: ownReply, isCurrentUser: true },
+  render: (args) => <EditableComment {...args} />,
+  play: async ({ canvas, userEvent }) => {
+    const editButton = canvas.getByRole("button", { name: /edit/i });
+
+    // Open edit mode → the textarea gets the focus
+    await userEvent.click(editButton);
+    await expect(canvas.getByLabelText("Edit comment")).toHaveFocus();
+
+    // Press Esc → the focus returns to the Edit button
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() =>
+      expect(canvas.getByRole("button", { name: /edit/i })).toHaveFocus()
+    );
   },
 };
