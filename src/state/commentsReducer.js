@@ -5,6 +5,7 @@ import {
   removeComment,
   findThreadId,
   findComment,
+  applyVote,
 } from "./commentUtils";
 
 import { ACTIONS } from "./actionTypes";
@@ -51,22 +52,10 @@ export function commentsReducer(state, action) {
       return { ...state, comments: removeComment(state.comments, action.id) };
 
     case ACTIONS.UPVOTE:
-      return {
-        ...state,
-        comments: updateComment(state.comments, action.id, (comment) => ({
-          ...comment,
-          score: comment.score + 1,
-        })),
-      };
+      return applyVote(state, action.id, 1);
 
     case ACTIONS.DOWNVOTE:
-      return {
-        ...state,
-        comments: updateComment(state.comments, action.id, (comment) => ({
-          ...comment,
-          score: Math.max(0, comment.score - 1),
-        })),
-      };
+      return applyVote(state, action.id, -1);
 
     default:
       if (import.meta.env.DEV) {
