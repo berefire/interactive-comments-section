@@ -6,7 +6,11 @@ afterEach(() => {
   cleanup();
 });
 
-if (!HTMLDialogElement.prototype.showModal) {
+// <dialog> polyfill for jsdom (skipped in Node test files)
+if (
+  typeof HTMLDialogElement !== "undefined" &&
+  !HTMLDialogElement.prototype.showModal
+) {
   HTMLDialogElement.prototype.showModal = function () {
     this.open = true;
   };
