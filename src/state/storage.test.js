@@ -4,7 +4,15 @@ import { loadState, saveState, STORAGE_KEY } from "./storage";
 const defaultState = { currentUser: { username: "juliusomo" }, comments: [] };
 const savedState = {
   currentUser: { username: "juliusomo" },
-  comments: [{ id: 1, content: "Saved comment", score: 5, replies: [] }],
+  comments: [
+    {
+      id: 1,
+      content: "Saved comment",
+      score: 5,
+      user: { username: "amyrobson" },
+      replies: [],
+    },
+  ],
 };
 
 beforeEach(() => {
@@ -34,6 +42,46 @@ describe("loadState", () => {
     vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
       throw new Error("Storage unavailable");
     });
+    expect(loadState(defaultState)).toBe(defaultState);
+  });
+
+  it.each([
+    ["null", "null"],
+    ["an empty object", "{}"],
+    [
+      "comments that are not an array",
+      JSON.stringify({ ...savedState, comments: "hello" }),
+    ],
+    [
+      "a comment without replies",
+      JSON.stringify({
+        ...savedState,
+        comments: [{ ...savedState.comments[0], replies: undefined }],
+      }),
+    ],
+    ["a missing currentUser", JSON.stringify({ comments: [] })],
+    // New: a reply with an invalid shape (deep validation)
+    [
+      "a reply without a user",
+      JSON.stringify({
+        ...savedState,
+        comments: [
+          {
+            ...savedState.comments[0],
+            replies: [
+              { id: 2, content: "Hi", score: 0, replyingTo: "amyrobson" },
+            ],
+          },
+        ],
+      }),
+    ],
+    // New: votes must be an object if it exists
+    [
+      "votes that are not an object",
+      JSON.stringify({ ...savedState, votes: "x" }),
+    ],
+  ])("returns the default state when the saved data is %s", (_label, value) => {
+    localStorage.setItem(STORAGE_KEY, value);
     expect(loadState(defaultState)).toBe(defaultState);
   });
 });
