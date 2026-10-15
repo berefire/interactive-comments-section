@@ -39,3 +39,16 @@ export const CurrentUser = {
     await expect(canvas.queryByRole("button", { name: /reply/i })).not.toBeInTheDocument();
   },
 };
+
+export const Editing = {
+  args: {
+    comment: ownReply,
+    isCurrentUser: true,
+    isEditing: true,
+    onUpdate: fn(),
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByLabelText("Edit comment")).toBeInTheDocument();
+    await expect(canvas.getByRole("button", { name: /update/i })).toBeInTheDocument();
+  },
+};

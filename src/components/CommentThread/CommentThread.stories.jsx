@@ -1,4 +1,4 @@
-import { expect, within } from "storybook/test";
+import { expect, within, fn } from "storybook/test";
 import data from "@/data/data.json";
 import CommentThread from "./CommentThread";
 
@@ -7,7 +7,18 @@ const { currentUser, comments } = data;
 export default {
   title: "Components/CommentThread",
   component: CommentThread,
-  args: { currentUser },
+  args: { 
+    currentUser,
+    replyingToId: null,
+    editingId: null,
+    onUpvote: fn(),
+    onDownvote: fn(),
+    onReply: fn(),
+    onSubmitReply: fn(),
+    onEdit: fn(),
+    onUpdate: fn(),
+    onDelete: fn(),
+  },
   decorators: [
     (Story) => (
       <ul className="max-w-182.5 bg-grey-50 p-4">
@@ -49,5 +60,20 @@ export const OwnReplyActions = {
     await expect(within(ownReply).getByRole("button", { name: /edit/i })).toBeInTheDocument();
     await expect(within(ownReply).getByRole("button", { name: /delete/i })).toBeInTheDocument();
     await expect(within(ownReply).queryByRole("button", { name: /reply/i })).not.toBeInTheDocument();
+  },
+};
+
+export const ReplyFormOpen = {
+  args: { comment: comments[0], replyingToId: comments[0].id },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByDisplayValue("@amyrobson")).toHaveFocus();
+  },
+};
+
+export const ClickCallsHandlerWithId = {
+  args: { comment: comments[0] },
+  play: async ({ args, canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: /reply/i }));
+    await expect(args.onReply).toHaveBeenCalledWith(comments[0].id);
   },
 };
