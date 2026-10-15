@@ -7,14 +7,25 @@ const image = {
 };
 const defaultState = {
   currentUser: { username: "juliusomo", image },
-  comments: [],
+  comments: [
+    {
+      id: 1,
+      content: "Default comment",
+      createdAt: "1 month ago",
+      score: 0,
+      user: { username: "juliusomo", image },
+      replies: [],
+    },
+  ],
 };
+
 const savedState = {
   currentUser: { username: "juliusomo", image },
   comments: [
     {
       id: 1,
       content: "Saved comment",
+      createdAt: "1 month ago",   // ← add this
       score: 5,
       user: { username: "amyrobson", image },
       replies: [],
