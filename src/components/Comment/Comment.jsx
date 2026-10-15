@@ -34,7 +34,7 @@ function Comment({
       className={[
         "grid gap-4 rounded-lg bg-white p-4 md:gap-x-6 md:p-6",
         // mobile: 2 columns
-        "grid-cols-[minmax(0,1fr)_auto]",
+        "grid-cols-[auto_minmax(0,1fr)]",
         "[grid-template-areas:'header_header'_'content_content'_'score_actions']",
         // md+: 3 columns
         "md:grid-cols-[auto_minmax(0,1fr)_auto]",
@@ -75,7 +75,7 @@ function Comment({
           onDownvote={onDownvote}
         />
       </div>
-      <div className="mt-6 md:mt-0 flex items-center gap-6 justify-self-end [grid-area:actions]">
+      <div className="mt-6 md:mt-0 flex flex-wrap items-center justify-end gap-x-4 gap-y-2 gap-6 [grid-area:actions]">
         {isCurrentUser ? (
           <>
             <ActionButton
