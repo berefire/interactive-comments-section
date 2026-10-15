@@ -81,3 +81,22 @@ export const Interactive = {
     await expect(canvas.getByText("11")).toBeInTheDocument();
   },
 };
+
+export const Upvoted = {
+  args: { userVote: 1 },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("button", { name: "Upvote" })).toHaveAttribute("aria-pressed", "true");
+    await expect(canvas.getByRole("button", { name: "Downvote" })).toHaveAttribute("aria-pressed", "false");
+  },
+};
+
+export const DownvotedAtZero = {
+  args: { score: 0, userVote: -1 },
+  play: async ({ args, canvas, userEvent }) => {
+    // at 0, but the user downvoted → clicking again UNDOES it, so it's allowed
+    const downvote = canvas.getByRole("button", { name: "Downvote" });
+    await expect(downvote).not.toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(downvote);
+    await expect(args.onDownvote).toHaveBeenCalledTimes(1);
+  },
+};
