@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useReducer, useState, useEffect } from "react";
 import data from "@/data/data.json";
 import { commentsReducer } from "@/state/commentsReducer";
 import { ACTIONS } from "@/state/actionTypes";
@@ -6,9 +6,10 @@ import CommentThread from "@/components/CommentThread/CommentThread";
 import CommentForm from "@/components/CommentForm/CommentForm";
 import Attribution from "@/components/Attribution/Attribution";
 import DeleteModal from "@/components/DeleteModal/DeleteModal";
+import { loadState, saveState } from "@/state/storage";
 
 function App() {
-  const [state, dispatch] = useReducer(commentsReducer, data);
+  const [state, dispatch] = useReducer(commentsReducer, data, loadState);
   const [replyingToId, setReplyingToId] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
@@ -38,6 +39,10 @@ function App() {
     dispatch({ type: ACTIONS.DELETE_COMMENT, id: deletingId });
     setDeletingId(null);
   };
+
+  useEffect(() => {
+    saveState(state);
+  }, [state]);
 
   return (
     <div className="min-h-dvh flex flex-col bg-grey-50">
