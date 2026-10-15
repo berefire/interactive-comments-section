@@ -22,3 +22,15 @@
   font-weight: 700;
   src: url('../assets/fonts/rubik/rubik-v31-latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+    background-color: var(--color-grey-50);
+  }
+
+  html:has(dialog:modal) {
+    overflow: hidden;
+    background-color: color-mix(in srgb, black 50%, var(--color-grey-50));
+  }
+}
